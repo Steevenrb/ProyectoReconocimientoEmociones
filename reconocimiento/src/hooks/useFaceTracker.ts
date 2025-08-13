@@ -33,7 +33,6 @@ export function useFaceTracker(autoSaveMs = 3000) {
   const [ready, setReady] = useState(false);
   const [running, setRunning] = useState(false);
 
-
   // buffers y timers
   const bufferRef = useRef<Array<{ name: string; emotion: string }>>([]);
   const detLoopRef = useRef<number | null>(null);
@@ -118,9 +117,8 @@ export function useFaceTracker(autoSaveMs = 3000) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      // console.log("[faceTracker] enviado", payload);
     } catch (e) {
-      // console.warn("[faceTracker] error guardando", e);
+      console.warn("[faceTracker] error guardando", e);
     }
   }, [API]);
 
@@ -185,18 +183,13 @@ export function useFaceTracker(autoSaveMs = 3000) {
       });
       try {
         await video.play();
-      } catch (err: any) {
-        if (err?.name === "AbortError") {
-          setTimeout(() => { video.play().catch(() => {}); }, 100);
-        } else {
-          console.error("video.play() falló:", err);
-        }
+      } catch (err) {
+        console.error("video.play() falló:", err);
       }
 
       faceapi.matchDimensions(canvas, { width: 720, height: 480 });
       setRunning(true);
       startingRef.current = false;
-
 
       // detección ~700ms
       detLoopRef.current = window.setInterval(async () => {
@@ -234,6 +227,7 @@ export function useFaceTracker(autoSaveMs = 3000) {
       firstSaveTimeoutRef.current = setTimeout(saveNow, early);
     } catch (e) {
       console.error("No se pudo iniciar la cámara:", e);
+      alert("No se pudo acceder a la cámara. Por favor, verifica los permisos.");
       startingRef.current = false;
     }
   }, [ready, running, autoSaveMs, saveNow]);

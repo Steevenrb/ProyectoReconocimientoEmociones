@@ -143,18 +143,10 @@ export default function ClassroomRisk() {
                         {/* Contenido de la actividad */}
                         <div className="p-3 pt-0 space-y-3">
                           <div>
-                            <div className="text-sm font-semibold">Mientras veía el video</div>
+                            <div className="text-sm font-semibold">Emociones detectadas en la Actividad</div>
                             <div className="text-xs text-gray-700">
                               {countsLine(act.video.counts)}{" "}
                               <span className="text-gray-400">(total {act.video.total})</span>
-                            </div>
-                          </div>
-
-                          <div>
-                            <div className="text-sm font-semibold">Mientras realizó el examen</div>
-                            <div className="text-xs text-gray-700">
-                              {countsLine(act.quiz.counts)}{" "}
-                              <span className="text-gray-400">(total {act.quiz.total})</span>
                             </div>
                           </div>
 
