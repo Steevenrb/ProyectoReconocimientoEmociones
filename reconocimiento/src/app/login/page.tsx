@@ -12,8 +12,22 @@ export default function LoginPage() {
   });
   const [message, setMessage] = useState("");
 
+  // Validación de los campos para prevenir inyecciones SQL
+  const validateInput = (name: string, value: string) => {
+    if (name === "username" && !/^[a-zA-Z0-9]+$/.test(value)) {
+      setMessage("❌ El nombre de usuario solo puede contener letras y números.");
+      return false;
+    }
+    return true;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Validar antes de actualizar
+    if (validateInput(name, value)) {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

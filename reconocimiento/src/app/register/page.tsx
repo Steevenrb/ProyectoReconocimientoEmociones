@@ -15,8 +15,30 @@ export default function RegisterPage() {
   });
   const [message, setMessage] = useState("");
 
+  // Validación de los campos para prevenir inyecciones SQL
+  const validateInput = (name: string, value: string) => {
+    if (name === "username" && !/^[a-zA-Z0-9]+$/.test(value)) {
+      setMessage("❌ El nombre de usuario solo puede contener letras y números.");
+      return false;
+    }
+    if (name === "cedula" && !/^\d+$/.test(value)) {
+      setMessage("❌ La cédula debe contener solo números.");
+      return false;
+    }
+    if (name === "codigo" && !/^[a-zA-Z0-9]+$/.test(value)) {
+      setMessage("❌ El código de verificación solo puede contener letras y números.");
+      return false;
+    }
+    return true;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Validar antes de actualizar
+    if (validateInput(name, value)) {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,7 +148,6 @@ export default function RegisterPage() {
           required
         />
 
-        {/* Solo mostrar el campo de imagen si el rol es "estudiante" */}
         {formData.role === "estudiante" && (
           <input
             type="file"
